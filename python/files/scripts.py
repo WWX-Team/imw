@@ -144,7 +144,17 @@ class imw:
         
         return self
     
-    #def edit(self, x, y)
+    def edit(self, x : int = 0, y : int = 0, color : list = [0, 0, 0, 0]):
+        """
+        [IMW / Edit]: Edit a pixel inside an IMW object.\n
+        \xA0\xA0- x (0, xsz -1) ;\n
+        \xA0\xA0- y (0, ysz -1) ;\n
+        \xA0\xA0- color (rgba list) ;\n
+        """
+        if len(color) != 4: return self 
+        if x >= self.xsz or y >= self.ysz or x < 0 or y < 0: return self    
+        self.img[y][x] = color
+        return self
 
 class color:
     """
