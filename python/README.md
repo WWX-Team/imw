@@ -1,5 +1,5 @@
 # Documentation
-~ **python edition** ~ v0
+~ **python edition** ~ v0.1
 
 ## Documentation
 
@@ -8,10 +8,11 @@
 #### imw
 
 Represent an `imw` image.
+
 ```python
 imw(
-     xsize : int = "image width"
-     ysize : int = "image height"
+     xsize : int = 'image width'
+     ysize : int = 'image height'
    ) # -> create an imw object
 #    | ###.vars
 #         .img -> image file
@@ -35,9 +36,11 @@ imw.unpack() # -> open an imw file into an imw object
 
 #### color
 
+Represent a numeric color.
+
 ```python
 color(
-       dec : int = decimal color
+       dec : int = 'decimal color'
      ) # -> create a color object
 #      | ###.vars
 #           .cl -> color code
@@ -47,6 +50,8 @@ color(
 color.convert() # -> convert a color object to an other format
 #                  | to : str = color format => 'rgba' | color.types
 ```
+
+⚠️ | **Notice** | `rgba` format is highly RECOMMANDED for use
 
 ----
 ### How to use
