@@ -31,6 +31,8 @@ imw.unpack() # -> open an imw file into an imw object
 
 ```
 
+⚠️ | **Notice** | IMW object use `rgba` color object
+
 #### color
 
 ```python
