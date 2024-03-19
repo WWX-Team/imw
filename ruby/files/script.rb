@@ -7,7 +7,7 @@ class Imw
     attr_accessor :img, :xsz, :ysz, :res
 
     def initialize(xsize = 0, ysize = 0)
-        @img = Array.new(ysize) {Array.new(xsize) {[0, 0, 0, 0]}}
+        @img = Array.new(ysize) {Array.new (xsize){Color.new(cn = 'rgba', value = [0, 0, 0, 0])}}
         @xsz = xsize
         @ysz = ysize
         @res = 1
@@ -38,12 +38,8 @@ class Imw
         ysize.times { |index|
                         __new_image.append([])
                         xsize.times { |pixel|
-                                        if (index +1) <= __old_y
-                                            if (pixel +1) <= __old_x
+                                        if (index +1) <= __old_y and (pixel +1) <= __old_x
                                                 __new_image[index].append(self.img[index][pixel])
-                                            else
-                                                __new_image[index].append(Array.new(4, 0))
-                                            end
                                         else
                                             __new_image[index].append(Array.new(4, 0))
                                         end
@@ -55,15 +51,34 @@ class Imw
         self.ysz = ysize
         return self
     end
+
+    def to_str()
+        return self.pack
+    end
+
+    def pack()
+        packed =  ""
+        packed += self.res.to_s + "\\"
+        packed += self.ysz.to_s + "@"
+        self.ysz.times  { |index|
+                            self.xsz.times  { |pixel|
+                                                packed += self.img[index][pixel].convert(to = 'dec').cl.to_s + "/"
+                                            }
+                            packed += "#/"
+                        }
+        packed += "◊Created with IMW-RUBY◊"
+        return packed
+    end
+
 end
 
 class Color
 
     attr_accessor :cn, :cl, :types
 
-    def initialize(value = 0)
+    def initialize(cn = 'dec', value = 0)
         @cl = value
-        @cn = 'dec'
+        @cn = cn
         @types = ['rgba', 'dec']
     end
 
