@@ -3,4 +3,6 @@
 
 ----
 
-v0.1 python is out
+`v0.2` **python** & **ruby** is out
+
+----
