@@ -1,5 +1,5 @@
 # Documentation
-~ **ruby edition** ~ v0
+~ **ruby edition** ~ v0.2
 
 *Please notice that **ruby edition** is updated after python edition, for every RELEASE only.* *Some features may be missing.*
 
@@ -15,10 +15,10 @@ Represent an `imw` image.
 var = Imw.new
 # Create a new Imw object
 # var.    | attr_accessor
-#    .img => image array
-#    .res => image resolution
-#    .xsz => image width
-#    .ysz => image height
+#    .img -> image array
+#    .res -> image resolution
+#    .xsz -> image width
+#    .ysz -> image height
 
 # METHODS
 
@@ -30,7 +30,7 @@ var.crop(
 
 ```
 
-⚠️ | **Notice** | IMW object use `rgba` color object
+⚠️ | **Notice** | IMW object use Color(type = 'rgba') object for pixels
 
 #### color
 
@@ -40,9 +40,9 @@ Represent a numeric color.
 var = Color.new
 # Create a new Color object
 # var.    | attr_accessor
-#    .cn    => color format
-#    .cl    => color code
-#    .types => possible color format
+#    .cn    -> color format
+#    .cl    -> color code
+#    .types -> possible color format
 
 # METHODS
 
