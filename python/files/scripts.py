@@ -2,7 +2,7 @@
 
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– #
 
-class imw:
+class Imw:
     """
     IMW class :\n
     \xA0\xA0- .img -> image array      ;\n
@@ -11,12 +11,12 @@ class imw:
     \xA0\xA0- .xsz -> image width      ;\n
     """
     def __init__(self, ysize:int=0, xsize:int=0):
-        self.img = [[[0, 0, 0, 0] for x in range(xsize)] for y in range(ysize)]
+        self.img = [[Color(type = 'rgba', value = [0, 0, 0, 0]) for x in range(xsize)] for y in range(ysize)]
         self.res = 1
         self.ysz = ysize
         self.xsz = xsize
         
-    def crop(self, xsize:int='', ysize:int='', clrwith:list=[0, 0, 0, 0]):
+    def crop(self, xsize:int='', ysize:int=''):
         """
         [IMW / Crop]: Add / Remove pixels to crop an IMW.\n
         \xA0\xA0- xsize (width)  ;\n
@@ -36,7 +36,7 @@ class imw:
                 if line +1 <= __old_y and pixel +1 <= __old_x:
                         __new_image[line].append(self.img[line][pixel])
                 else:
-                    __new_image[line].append([0, 0, 0, 0])
+                    __new_image[line].append(Color(type = 'rgba', value = [0, 0, 0, 0]))
         # Buidling Image
         self.xsz = xsize
         self.ysz = ysize
@@ -53,14 +53,9 @@ class imw:
         for line in self.img:
             __build_line = ''
             for pixel in line:
-                __pixel = color()
-                __pixel.convert(to = 'rgba')
-                for i in range(len(pixel)):
-                    __pixel.edit(target = color.canals[i], value = pixel[i])
-                __pixel.convert(to = 'dec')
-                __build_line += str(__pixel.cl) + '/'
+                __build_line += str(pixel.convert(to = 'dec').cl) + '/'
             __build += __build_line + '#/'    
-        return __build + '◊'
+        return __build + '◊Created with IMW-PYTHON◊'
         
     def unpack(self, code:str):
         """
@@ -102,7 +97,7 @@ class imw:
                     __img_line = []
                     __img_line_x = 0
                 else:
-                    __img_line.append(color(dec = int(__img_pixel)))
+                    __img_line.append(Color(type = 'dec', value = int(__img_pixel)))
                     __img_line_x += 1
                 __img_pixel = ''
             else:
@@ -114,15 +109,15 @@ class imw:
         # Building Data
         for line in range(len(__img)):
             for pixel in range(len(__img[line])):
-                __img[line][pixel] = __img[line][pixel].convert(to = 'rgba').cl
+                __img[line][pixel] = __img[line][pixel].convert(to = 'rgba')
                 
         # Uniformiser la taille X
         for line in range(len(__img)):
             if len(__img[line])  != __max_x:
                 for el in range(round((__max_x - len(__img[line])) / 2 + -.4)):
-                    __img[line].insert(0, [0, 0, 0, 0])
+                    __img[line].insert(0, Color(type = 'rgba', value = [0, 0, 0, 0]))
                 for el in range(round((__max_x - len(__img[line])) / 2 + +.4)):
-                    __img[line].append([0, 0, 0, 0])
+                    __img[line].append(Color(type = 'rgba', value = [0, 0, 0, 0]))
                     
         self.img = __img
         self.res = __res
@@ -139,52 +134,39 @@ class imw:
         \xA0\xA0- color (rgba list) ;\n
         """
         if len(color) != 4: return self 
-        if x >= self.xsz or y >= self.ysz or x < 0 or y < 0: return self    
-        self.img[y][x] = color
+        if x >= self.xsz or y >= self.ysz or x < 0 or y < 0: return self
+        for i in range(len('rgba')):
+            self.img[y][x].edit(target = 'rgba'[i], value = color[i])
         return self
 
-class color:
+class Color:
     """
     Color class :\n
     \xA0\xA0- .types  -> working color formats [:list] ;\n
     \xA0\xA0- .cn     -> current color format  [:str]  ;\n
     \xA0\xA0- .cl     -> current color code    [:any]  ;\n
     """
-    types  = ['scratch', 'dec', 'rgb', 'rgba', 'hex']
+    types  = ['dec', 'rgba']
     canals = ['r', 'g', 'b', 'a']
         
-    def __init__(self, dec:int=0):
+    def __init__(self, type:str='dec', value:int=0):
         """
         [Color / Init]: [dec:int] represent a decimal scratch color
         """
-        self.cn = 'dec'
-        self.cl = dec
+        self.cn = type
+        self.cl = value
         
     def convert(self, to:str='dec'):
         if self.cn != to and to in self.types:
             # Get Color
             __color = 0
-            if self.cn in ['dec', 'scratch']:
+            if self.cn in ['dec']:
                 __color = self.cl
-            elif self.cn in ['rgb']:
-                __color = ((self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2]
             elif self.cn in ['rgba']:
                 __color = (((self.cl[3]) * 256 + self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2]
-            elif self.cn in ['hex']:
-                __color = (int('0x' + self.cl[0:2], 16) * 256 + int('0x' + self.cl[2:4], 16)) * 256 + int('0x' + self.cl[4:6], 16)
-                if len(self.cl) == 8: __color += (255 - int('0x' + self.cl[6:8], 16)) * 16777216
             # Convert DEC to Color
             __new_color = __color
-            if to in ['rgb']:
-                __opacity      = 255 - __color // 16777216
-                __color        = (255 - __opacity) * 16777216
-                __new_color    = [0, 0, 0]
-                __new_color[0] = __color // 65536
-                __color       -= __new_color[0] * 65536
-                __new_color[1] = __color // 256
-                __color       -= __new_color[1] * 256
-                __new_color[2] = __color // 1
-            elif to in ['rgba', 'hex']:
+            if to in ['rgba']:
                 __new_color = [0, 0, 0, 0]
                 __new_color[3] = 255 - __color // 16777216
                 __color       -= (255 - __new_color[3]) * 16777216
@@ -193,16 +175,6 @@ class color:
                 __new_color[1] = __color // 256 
                 __color       -= __new_color[1] * 256
                 __new_color[2] = __color // 1
-                if to in ['hex']:
-                    for i in range(len(__new_color)):
-                        __hex_color = hex(__new_color[i])
-                        __hex_color = __hex_color[2:len(__hex_color)]
-                        if len(__hex_color) == 1: __hex_color = '0' + __hex_color
-                        __new_color[i] = __hex_color
-                    __hex_color = __new_color
-                    __new_color = ''
-                    for canal in __hex_color:
-                        __new_color += canal
             # Breakline
             self.cl = __new_color
             self.cn = to
@@ -214,7 +186,7 @@ class color:
             
     def edit(self, target:str='r', value:int=0, add:int=None):
         __mem_cn = self.cn
-        __target = color.canals.index(target)
+        __target = Color.canals.index(target)
         if self.cn != 'rgba': self.convert(to = 'rgba')
         if add == None: self.cl[__target % 4] = value % 256
         else          : self.cl[__target % 4] = (self.cl[__target % 4] + add) % 256
