@@ -23,37 +23,24 @@ class imw:
         \xA0\xA0- ysize (height) ;\n
         \xA0\xA0- clrwith (color) ;
         """
-        xs = xsize
-        if xs == '':
-            xs = self.xsz
-        ys = ysize
-        if ys == '':
-            ys = self.ysz
-        if ys == self.ysz and xs == self.xsz: return self
-        __repeat_x = xs
-        if self.xsz > __repeat_x: __repeat_x = self.xsz
-        __repeat_y = ys
-        if self.ysz > __repeat_y: __repeat_y = self.ysz
-        __file     = self.img
-        __y_file   = []
-        __new_file = []
-        # Crop Y
-        for stepy in range(__repeat_y):
-            if stepy < ys:
-                if stepy < self.ysz: __y_file.append(__file[stepy])
-                else               :  __y_file.append([])
-        # Crop X      
-        for stepy in range(len(__y_file)):
-            __new_file.append([])
-            for stepx in range(__repeat_x):
-                if stepx < xs:
-                    if stepx < len(__y_file[stepy]): __new_file[stepy].append(__y_file[stepy][stepx])
-                    else                           :
-                        __new_file[stepy].append(clrwith)
-        # Rebuild IMW
-        self.img = __new_file
-        self.xsz = __repeat_x
-        self.ysz = __repeat_y
+        # Asserts
+        if xsize == self.xsz and ysize == self.ysz or (xsize < 0 or ysize < 0): return self
+        # Variables
+        __old_x = self.xsz
+        __old_y = self.ysz
+        __new_image = []
+        # Croping image
+        for line in range(ysize):
+            __new_image.append([])
+            for pixel in range(xsize):
+                if line +1 <= __old_y and pixel +1 <= __old_x:
+                        __new_image[line].append(self.img[line][pixel])
+                else:
+                    __new_image[line].append([0, 0, 0, 0])
+        # Buidling Image
+        self.xsz = xsize
+        self.ysz = ysize
+        self.img = __new_image
         return self
         
     def pack(self) -> str:
