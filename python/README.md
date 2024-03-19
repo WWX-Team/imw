@@ -1,16 +1,16 @@
 # Documentation
-~ **python edition** ~ v0.1
+~ **python edition** ~ v0.2
 
 ## Documentation
 
 ### Classes
 
-#### imw
+#### Imw
 
 Represent an `imw` image.
 
 ```python
-imw(
+Imw(
      xsize : int = 'image width'
      ysize : int = 'image height'
    ) # -> create an imw object
@@ -32,19 +32,20 @@ imw.unpack() # -> open an imw file into an imw object
 
 ```
 
-⚠️ | **Notice** | IMW object use `rgba` color object
+⚠️ | **Notice** | IMW object use Color(type = 'rgba') object for pixels
 
-#### color
+#### Color
 
 Represent a numeric color.
 
 ```python
-color(
+Color(
        dec : int = 'decimal color'
      ) # -> create a color object
 #      | ###.vars
-#           .cl -> color code
-#           .cn -> color format
+#           .cl    -> color code
+#           .cn    -> color format
+#           .types -> supported color format
 
 ###.methods
 color.convert() # -> convert a color object to an other format
