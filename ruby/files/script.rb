@@ -41,7 +41,7 @@ class Imw
                                         if (index +1) <= __old_y and (pixel +1) <= __old_x
                                                 __new_image[index].append(self.img[index][pixel])
                                         else
-                                            __new_image[index].append(Array.new(4, 0))
+                                            __new_image[index].append(Color.new(cn = 'rgba', value = [0, 0, 0, 0]))
                                         end
                                     }
                     }
