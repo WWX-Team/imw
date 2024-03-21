@@ -97,7 +97,8 @@ class Imw:
                     __img_line = []
                     __img_line_x = 0
                 else:
-                    __img_line.append(Color(type = 'dec', value = int(__img_pixel)))
+                    __img_color = Color(type = 'dec', value = int(__img_pixel))
+                    __img_line.append(__img_color.convert(to = 'rgba'))
                     __img_line_x += 1
                 __img_pixel = ''
             else:
@@ -105,13 +106,8 @@ class Imw:
             idx += 1
             
         if idx > __len_code: return None
-            
-        # Building Data
-        for line in range(len(__img)):
-            for pixel in range(len(__img[line])):
-                __img[line][pixel] = __img[line][pixel].convert(to = 'rgba')
                 
-        # Uniformiser la taille X
+        # Croping Image
         for line in range(len(__img)):
             if len(__img[line])  != __max_x:
                 for el in range(round((__max_x - len(__img[line])) / 2 + -.4)):
@@ -163,7 +159,7 @@ class Color:
             if self.cn in ['dec']:
                 __color = self.cl
             elif self.cn in ['rgba']:
-                __color = (((self.cl[3]) * 256 + self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2]
+                __color = (((255 - self.cl[3]) * 256 + self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2]
             # Convert DEC to Color
             __new_color = __color
             if to in ['rgba']:
