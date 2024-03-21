@@ -15,12 +15,19 @@ class Imw
 
     def doc
         puts ""
-        print   " IMW class.\n
-                  | .img -> image array
-                  | .xsz -> image width
-                  | .ysz -> image height
-                  | .res -> image resolution
-                "
+        puts "–––––––––+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––+"
+        puts " Class   |                         IMW class (Imw)                          |"
+        puts "         | –– Symbols ––                                                    |"
+        puts "         | .img -> image array                                              |"
+        puts "         | .xsz -> image width                                              |"
+        puts "         | .ysz -> image height                                             |"
+        puts "         | .res -> image resolution                                         |"
+        puts "         | –– Methods ––                                                    |"
+        puts "         | .new(xsize : int, ysize : int)  -> create a new imw              |"
+        puts "         | .crop(xsize : int, ysize : int) -> crop an imw                   |"
+        puts "         | .pack()                         -> pack an imw into its savecode |"
+        puts "         | .unpack(code : imw.pack())      -> update an imw with a savecode |"  
+        puts "–––––––––+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––+"
         puts ""
         return self
     end
@@ -62,14 +69,85 @@ class Imw
         packed += self.ysz.to_s + "@"
         self.ysz.times  { |index|
                             self.xsz.times  { |pixel|
-                                                packed += self.img[index][pixel].convert(to = 'dec').cl.to_s + "/"
+                                                packed << self.img[index][pixel].convert(to = 'dec').cl.to_s + "/"
                                             }
-                            packed += "#/"
+                            packed << "#/"
                         }
         packed += "◊Created with IMW-RUBY◊"
         return packed
     end
 
+    def unpack(code)
+        if code.class != String
+            return self
+        end
+        __needed = ['\\', '@', '/', '#', '◊']
+        #__needed.each { |n|
+        #    if code.include?(n)
+        #        return self
+        #    end
+        #              }
+        __img_res = 0
+        __img_ysz = 0
+        __img_xsz = 0
+        __img = []
+        idx = 0
+        while code[idx] != '\\' and idx <= code.length
+            __img_res = code[0..idx].to_f
+            idx += 1
+        end
+        if __img_res.to_i == __img_res then __img_res = __img_res.to_i end
+        idx += 1
+        idx_saved = idx
+        while code[idx] != '@' and idx <= code.length
+            __img_ysz = code[idx_saved..idx].to_i
+            idx += 1
+        end
+        idx += 1
+        idx_saved = idx
+        __data = ''
+        __line = []
+        __lenX = 0
+        while code[idx] != '◊' and idx <= code.length
+            if code[idx]  == '/'
+                if __data == '#'
+                    __img.append(__line)
+                    if __lenX > __img_xsz then __img_xsz = __lenX end
+                    __line = []
+                    __lenX = 0
+                else
+                    __lenX += 1
+                    __color = Color.new(cn = 'dec', value = __data.to_i)
+                    __color.convert(to = 'rgba')
+                    __line.append(__color)
+                end
+                __data = ''
+            else
+                __data << code[idx]
+            end
+            idx += 1
+        end
+        # Croping Image
+        __img.each_with_index   { |el, line|
+                        if __img[line].length != __img_xsz
+                            __line_len = __img[line].length.to_f
+                            __img[line].each    { |line|
+                                                    ((__img_xsz - __line_len) / 2 - 0.4).round.times  { 
+                                                                                                        __img[line].insert(0, Color.new(cn = 'rgba', value = [0, 0, 0, 0]))
+                                                                                                    }
+                                                    ((__img_xsz - __line_len) / 2 + 0.4).round.times  {
+                                                                                                        __img[line].append(Color.new(cn = 'rgba', value = [0, 0, 0, 0]))
+                                                                                                    }
+                                                }
+                        end
+                                }
+        # Building Image
+        self.img = __img
+        self.ysz = __img_ysz
+        self.xsz = __img_xsz
+        self.res = __img_res
+        return self
+    end
 end
 
 class Color
@@ -84,11 +162,16 @@ class Color
 
     def doc
         puts ""
-        print   " Color class.\n
-                  | .cn    -> current format
-                  | .cl    -> current color code
-                  | .types -> possible formats
-                "
+        puts "–––––––––+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––+"
+        puts " Class   |                            Color class                           |"
+        puts "         | –– Symbols ––                                                    |"
+        puts "         | .cn    -> image array                                            |"
+        puts "         | .cl    -> image width                                            |"
+        puts "         | .types -> image height                                           |"
+        puts "         | –– Methods ––                                                    |"
+        puts "         | .new(cn : Color.types, value : custom)  -> create a new object   |"
+        puts "         | .convert(to : Color.types) -> convert a color to an other format |"
+        puts "–––––––––+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––+"
         puts ""
         return self
     end
@@ -101,7 +184,7 @@ class Color
         # Variables
         __cn = self.cn
         if __cn == 'rgba'
-            __as = ((((self.cl[3]) * 256 + self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2])
+            __as = ((((255 - self.cl[3]) * 256 + self.cl[0]) * 256 + self.cl[1]) * 256 + self.cl[2])
         elsif __cn == 'dec'
             __as_c = self.cl
             # Alpha
