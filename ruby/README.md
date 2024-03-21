@@ -22,11 +22,22 @@ var = Imw.new
 
 # METHODS
 
+var.doc
+
 var.crop(
       xsize : int = "image width"
       ysize : int = "image height"
         )
 # Crop the image and return/save the result
+
+var.pack(
+        )
+# Return the .imw savecode of the current imw object
+
+var.unpack(
+      code : Imw.pack()
+        )
+# Update an imw with a .imw savecode
 
 ```
 
@@ -45,6 +56,8 @@ var = Color.new
 #    .types -> possible color format
 
 # METHODS
+
+var.doc
 
 var.convert(
          to : :types = "color format"
