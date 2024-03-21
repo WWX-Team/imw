@@ -73,7 +73,7 @@ class Imw
                                             }
                             packed << "#/"
                         }
-        packed += "◊Created with IMW-RUBY◊"
+        packed << "◊Created with IMW-RUBY◊"
         return packed
     end
 
