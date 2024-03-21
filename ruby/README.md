@@ -30,8 +30,7 @@ var.crop(
         )
 # Crop the image and return/save the result
 
-var.pack(
-        )
+var.pack
 # Return the .imw savecode of the current imw object
 
 var.unpack(
