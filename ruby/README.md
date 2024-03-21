@@ -25,7 +25,7 @@ var = Imw.new
 var.doc
 
 var.crop(
-      xsize : int = "image width"
+      xsize : int = "image width",
       ysize : int = "image height"
         )
 # Crop the image and return/save the result
