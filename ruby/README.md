@@ -12,7 +12,7 @@
 Represent an `imw` image.
 
 ```ruby
-var = Imw.new
+var = Imw.new(xsize = 'width', ysize = 'height')
 # Create a new Imw object
 # var.    | attr_accessor
 #    .img -> image array
