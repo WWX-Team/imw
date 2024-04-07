@@ -1,7 +1,5 @@
 # Documentation
-~ **ruby edition** ~ v0.2
-
-*Please notice that **ruby edition** is updated after python edition, for every RELEASE only.* *Some features may be missing.*
+~ **ruby edition** ~ v0.2.2
 
 ## Documentation
 
@@ -25,8 +23,8 @@ var = Imw.new(xsize = 'width', ysize = 'height')
 var.doc
 
 var.crop(
-      xsize : int = "image width",
-      ysize : int = "image height"
+      xsize : Integer = "image width",
+      ysize : Integer = "image height"
         )
 # Crop the image and return/save the result
 
@@ -38,9 +36,17 @@ var.unpack(
         )
 # Update an imw with a .imw savecode
 
+var.edit(
+      x       : Integer,
+      y       : Integer,
+      color   : Color
+        )
+# Update an image's pixel with Color class
+
+#to_i, to_a, #to_s
 ```
 
-⚠️ | **Notice** | IMW object use Color(type = 'rgba') object for pixels
+⚠️ | **Notice** | IMW object use Color class for pixels
 
 #### color
 
@@ -50,21 +56,30 @@ Represent a numeric color.
 var = Color.new
 # Create a new Color object
 # var.    | attr_accessor
-#    .cn    -> color format
 #    .cl    -> color code
-#    .types -> possible color format
-
 # METHODS
 
 var.doc
 
-var.convert(
-         to : :types = "color format"
-           )
-# Convert a color format to an other
-```
+var.rgba(
+      from : Integer
+        )
+# convert an int into a 4-int rgba color code |!| do not update self.cl
 
-⚠️ | **Notice** | `rgba` format is highly RECOMMANDED for use
+var.edit(
+      array : Array
+        )
+# update a color with an array (and check if array is corect)
+
+var.channel(
+      which : String ('r' or 'g' or 'b' or 'a'),
+      value : Integer 0 ≤ x ≤ 255
+           )
+# update a color's channel
+
+#to_i, to_a
+#is_valid?(array)
+```
 
 ----
 ### How to use
